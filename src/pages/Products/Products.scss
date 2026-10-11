@@ -154,6 +154,9 @@ $ease: cubic-bezier(0.2, 0.7, 0.2, 1);
       font-weight: 800;
       letter-spacing: -0.055em;
       animation-delay: 0.08s;
+      @media (max-width:600px){
+        font-size: 42px;
+      }
     }
 
     &__text {
@@ -532,7 +535,6 @@ $ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     .pg-hero__title {
-      font-size: 44px;
       line-height: 1;
       letter-spacing: -0.05em;
     }

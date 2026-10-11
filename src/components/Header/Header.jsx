@@ -324,9 +324,9 @@ function MobileNav({ open, onClose, t, serviceItems, productItems }) {
             <NavLink className="mnav__link" to={ROUTES.work} onClick={onClose}>{t.hdr_work}</NavLink>
           </div>
           <div className="mnav__item">
-            <a className="mnav__link" href="#contact" onClick={onClose}>
+            <Link className="mnav__link" to={'/contact'} onClick={onClose}>
               {t.hdr_contact || t.hdr_cta}
-            </a>
+            </Link>
           </div>
         </nav>
       </aside>

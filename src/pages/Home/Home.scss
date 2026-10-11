@@ -615,6 +615,9 @@ $ease: cubic-bezier(.2, .7, .2, 1);
         letter-spacing: -0.055em;
         animation-delay: .08s;
         line-height: 1;
+        @media (max-width:600px){
+          font-size: 42px;
+        }
       }
 
       p {

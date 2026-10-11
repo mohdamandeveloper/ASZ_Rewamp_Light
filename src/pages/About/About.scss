@@ -91,6 +91,9 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
                 font-weight: 800;
                 letter-spacing: -0.055em;
                 animation-delay: .08s;
+                @media (max-width:600px){
+                font-size: 42px;
+                }
             }
 
             p {
