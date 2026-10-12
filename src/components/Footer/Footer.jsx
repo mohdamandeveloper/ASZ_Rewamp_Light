@@ -47,7 +47,7 @@ export default function Footer() {
             <p>{t.ftr_about}</p>
             <div className="site-footer__contact">
               <a className="flink flink--sm" href="mailto:info@asztechnologies.com" dir="ltr">info@asztechnologies.com</a>
-              <a className="flink flink--sm" href="tel:+919740703030" dir="ltr">+91 97407 03030</a>
+              {/* <a className="flink flink--sm" href="tel:+919740703030" dir="ltr">+91 97407 03030</a> */}
             </div>
           </div>
 
