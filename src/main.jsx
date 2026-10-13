@@ -18,6 +18,8 @@ import Work from './pages/Work/Work';
 import Contact from './pages/Contact/Contact';
 import CaseStudy from './pages/CaseStudy/CaseStudy';
 import ProductDetail from './pages/ProductDetails/ProductDetails';
+import NotFound from './pages/NotFound/NotFound';
+import ComingSoon from './pages/ComingSoon/ComingSoon';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +41,9 @@ const router = createBrowserRouter(
       <Route path='work' element={<Work />} />
       <Route path='contact' element={<Contact />} />
       <Route path='case-study/:slug' element={<CaseStudy />} />
+      <Route path='privacy-policy' element={<ComingSoon type="privacy" />} />
+      <Route path='terms-and-conditions' element={<ComingSoon type="terms" />} />
+      <Route path='*' element={<NotFound />} />
     </Route>
   )
 )

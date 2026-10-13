@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import logo from '../../assets/images/asz-logo2.png';
+import logo from '../../assets/images/asz-logo2.webp';
 import { useLanguage, useTranslation, LANGUAGES } from '../../Context/LanguageContext';
 import './Header.scss';
 

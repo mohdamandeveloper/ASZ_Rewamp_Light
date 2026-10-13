@@ -174,7 +174,7 @@ export default function About() {
                         <div className="a-who__title rvl">
                             <div className="eyebrow">{t.about_who_eyebrow}</div>
                             <h2 className="h2">{t.about_who_title}<br /><span className="ac">{t.about_who_accent}</span></h2>
-                            <Link className="tlink" to="/services">{t.about_who_link} <Arrow /></Link>
+                            <Link className="tlink" to="/service">{t.about_who_link} <Arrow /></Link>
                         </div>
                         <div className="a-who__copy rvr">
                             <p>{t.about_who_p1}</p>
@@ -245,7 +245,7 @@ export default function About() {
                                         <div className="pdiv" style={st.div} />
                                         <h3><span className="ac">{num}</span> {q.title}</h3>
                                         <p>{q.text}</p>
-                                        <a className="pcta" href="mailto:info@asztechnologies.com" tabIndex={on ? 0 : -1}>{t.about_why_cta} <Arrow /></a>
+                                        <Link className="pcta" to="/contact" tabIndex={on ? 0 : -1}>{t.about_why_cta} <Arrow /></Link>
                                     </div>
                                     <button className="pbtn" type="button" aria-expanded={on} tabIndex={on ? -1 : 0} onClick={() => setPanel(i)} style={st.btn}>
                                         <span className="vd" />

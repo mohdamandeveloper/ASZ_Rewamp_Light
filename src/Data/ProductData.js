@@ -12,8 +12,8 @@ import prodSafin from '../assets/images/prod-safin3.webp';
 export const PRODUCTS = [
   { id: 'cordon', slug: 'cordon', name: 'Cordon', image: prodCordon, detail: true, comingSoon: false },
   { id: 'mediq', slug: 'mediq', name: 'MEDIQ', image: prodMediq, detail: true, comingSoon: true },
-  { id: 'jobscout', slug: 'jobscout', name: 'JobScout', image: prodJobscout, detail: false, external: true, url: '#jobscout-website', comingSoon: false },
-  { id: 'safin', slug: 'safin', name: 'Safin', image: prodSafin, detail: false, external: true, url: '#safin', comingSoon: false },
+  { id: 'jobscout', slug: 'jobscout', name: 'JobScout', image: prodJobscout, detail: false, external: true, url: 'https://jobsscout.in/', comingSoon: false },
+  { id: 'safin', slug: 'safin', name: 'Safin', image: prodSafin, detail: false, external: true, url: 'https://safinwater.com/', comingSoon: false },
 ];
 
 export const getProduct = (slug) => PRODUCTS.find((p) => p.slug === slug);

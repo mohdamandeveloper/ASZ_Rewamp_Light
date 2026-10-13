@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../Context/LanguageContext';
-import logo from '../../assets/images/asz-logo2.png';
+import logo from '../../assets/images/asz-logo2.webp';
 import './Footer.scss';
 
 // Internal routes use <Link>, in-page anchors and external links use <a>
@@ -85,8 +85,8 @@ export default function Footer() {
         <div className="site-footer__bottom">
           <span>{t.ftr_copyright}</span>
           <span className="site-footer__legal">
-            <a className="flink" href="#top">{t.footer_terms}</a>
-            <a className="flink" href="#top">{t.footer_privacy}</a>
+            <Link className="flink" to="/terms-and-conditions">{t.footer_terms}</Link>
+            <Link className="flink" to="/privacy-policy">{t.footer_privacy}</Link>
           </span>
         </div>
       </div>

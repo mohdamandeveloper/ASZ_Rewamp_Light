@@ -310,7 +310,7 @@ const translations = {
     home_products_eyebrow: "Our products",
     home_products_title: "We ship our own products.",
     home_products_accent: "Then we build yours.",
-    home_products_lede: "Our in-house products reflect the same engineering discipline we bring to client engagements — technology designed to solve real problems and operate in the real world.",
+    home_products_lede: "Our in-house products reflect the same engineering discipline we bring to client engagements technology designed to solve real problems and operate in the real world.",
     home_products_cordon_pill: "ASZ product · 01 · Intelligent Security",
     home_products_cordon_text: "AI-powered security and access control for modern premises.",
     home_products_chips: [

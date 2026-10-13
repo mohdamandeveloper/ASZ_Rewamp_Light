@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage, useTranslation } from '../../Context/LanguageContext';
+import rvImage from '../../assets/images/svc-pe.webp';
 import './Home.scss';
 
 /* ------------------------------------------------------------------ */
@@ -30,7 +31,7 @@ const ROUTES = {
 // Product engineering has no photo in src/assets yet: add public/assets/svc-pe.webp (a dark gradient shows until then).
 const SERVICE_BOXES = [
   { to: ROUTES.security, cls: 'bx-sec', anim: 'rvl', img: 'img-sec', style: { backgroundPosition: 'center 30%' }, mstyle: { backgroundPosition: 'center 20%' }, badge: 'home_services_security_badge', title: 'home_services_security_title' },
-  { to: ROUTES.engineering, cls: 'bx-pe', anim: 'rv', style: { background: "url('/src/assets/images/svc-pe.webp') center / cover, linear-gradient(160deg, #10222b, #0d0d0d 55%)" }, badge: 'home_services_engineering_label', title: 'home_services_engineering_title' },
+  { to: ROUTES.engineering, cls: 'bx-pe', anim: 'rv', style: { background: `url(${rvImage}) center / cover, linear-gradient(160deg, #10222b, #0d0d0d 55%)` }, badge: 'home_services_engineering_label', title: 'home_services_engineering_title' },
   { to: ROUTES.ai, cls: 'bx-ai', anim: 'rvr', img: 'img-ai', badge: 'home_services_ai_badge', title: 'home_services_ai_title' },
   { to: ROUTES.cloud, cls: 'bx-dt', anim: 'rv', img: 'img-dt', badge: 'home_services_cloud_badge', title: 'home_services_cloud_title' },
 ];
