@@ -1,6 +1,19 @@
 $ease: cubic-bezier(.2, .7, .2, 1);
 $ease2: cubic-bezier(.23, 1, .32, 1);
 
+// One-shot glow on the office card chosen from the map
+@keyframes ofc-flash {
+  0% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(242, 68, 15, .65);
+  }
+
+  100% {
+    opacity: 0;
+    box-shadow: 0 0 0 22px rgba(242, 68, 15, 0);
+  }
+}
+
 .about {
 
     /* ---------- Shared bits ---------- */
@@ -145,6 +158,34 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
         position: absolute;
         width: 0;
         height: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: none;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        // Generous invisible hit area so the 12px dot is easy to hover and tap
+        &::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: -22px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+        }
+
+        &:focus-visible {
+            outline: none;
+            z-index: 6;
+
+            .core {
+                box-shadow: 0 0 0 3px var(--pinhalo), 0 0 0 5px #fff;
+            }
+        }
 
         .core,
         .ring {
@@ -181,18 +222,20 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
             color: #fff;
             background: rgba(14, 14, 17, .86);
             border: 1px solid rgba(255, 255, 255, .16);
-            transition: background .3s, color .3s, transform .35s $ease, border-color .3s;
+            transition: background .3s, color .3s, transform .35s $ease, border-color .3s, box-shadow .3s;
 
             &--left {
-                left: 14px;
+                left: 20px;
             }
 
             &--right {
-                right: 14px;
+                right: 20px;
             }
         }
 
         &.is-on {
+            z-index: 5;
+
             .core {
                 transform: scale(1.5);
             }
@@ -202,6 +245,31 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
                 border-color: var(--ac);
                 transform: scale(1.08);
             }
+        }
+
+        // Hover: bigger dot, faster ring, label lifts and glows
+        &:hover {
+            z-index: 6;
+
+            .core {
+                transform: scale(1.9);
+                box-shadow: 0 0 0 3px var(--pinhalo), 0 0 22px 6px rgba(242, 68, 15, .65);
+            }
+
+            .ring {
+                animation-duration: 1.2s;
+            }
+
+            .lab {
+                background: var(--ac);
+                border-color: var(--ac);
+                transform: translateY(-3px) scale(1.12);
+                box-shadow: 0 10px 24px -8px rgba(242, 68, 15, .7);
+            }
+        }
+
+        &:active .core {
+            transform: scale(1.4);
         }
     }
 
@@ -228,13 +296,14 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
     }
 
     .ofc {
+        position: relative;
         padding: 24px 24px 28px;
         border-radius: 16px;
         outline: none;
         background: rgba(255, 255, 255, .035);
         border: 1px solid rgba(255, 255, 255, .14);
         border-top: 2px solid rgba(255, 255, 255, .14);
-        transition: border-color .35s, transform .45s $ease, background .35s;
+        transition: border-color .35s, transform .45s $ease, background .35s, box-shadow .35s;
 
         &:hover {
             transform: translateY(-4px);
@@ -242,6 +311,22 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
 
         &.is-on {
             border-top-color: var(--ac);
+        }
+
+        // Chosen from the map: full accent border, tint and glow until the reader browses elsewhere
+        &.is-picked {
+            transform: translateY(-4px);
+            background: rgba(242, 68, 15, .09);
+            border-color: var(--ac);
+            box-shadow: 0 24px 60px -24px rgba(242, 68, 15, .55);
+        }
+
+        &__flash {
+            position: absolute;
+            inset: -1px;
+            border-radius: 16px;
+            pointer-events: none;
+            animation: ofc-flash 1.4s ease-out 1 both;
         }
 
         &__country {
@@ -1064,6 +1149,11 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
         .vcard,
         .panel {
             transition: none;
+        }
+
+        .ofc__flash {
+            animation: none;
+            opacity: 0;
         }
     }
 }

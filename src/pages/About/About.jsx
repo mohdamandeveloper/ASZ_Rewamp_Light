@@ -61,6 +61,27 @@ export default function About() {
     const [p, setP] = useState(1);         // stats count-up progress
     const [loc, setLoc] = useState(0);     // highlighted office
     const [panel, setPanel] = useState(2); // open "Why ASZ" panel
+    const [picked, setPicked] = useState(null); // office chosen by clicking a map pin
+    const [tick, setTick] = useState(0);        // bumps on every pin click so the flash replays
+    const cardRefs = useRef([]);
+
+    /* Map pin click: scroll to that office card and highlight it */
+    const pickOffice = (i) => {
+        setLoc(i);
+        setPicked(i);
+        setTick((n) => n + 1);
+        const el = cardRefs.current[i];
+        if (!el) return;
+        const still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' });
+        el.focus({ preventScroll: true });
+    };
+
+    // Hovering / focusing a different card means the reader is browsing again, so drop the pinned highlight
+    const hoverCard = (i) => {
+        setLoc(i);
+        setPicked((p) => (p === i ? p : null));
+    };
 
     /* Stats: count up once when scrolled into view */
     useEffect(() => {
@@ -106,18 +127,29 @@ export default function About() {
                     </div>
                 </div>
 
-                <div className="maphold up" aria-hidden="true">
-                    <div className="maphold__mask"><div className="mapdots" /></div>
+                <div className="maphold up">
+                    <div className="maphold__mask" aria-hidden="true"><div className="mapdots" /></div>
                     {OFFICES.map((o, i) => (
-                        <span key={o.key} className={`pin${loc === i ? ' is-on' : ''}`} style={{ left: `${o.x}%`, top: `${o.y}%` }}>
-                            <span className="ring" />
-                            <span className="core" />
-                            <span className={`lab lab--${o.side}`}>{offices[i].city}</span>
-                        </span>
+                        <button
+                            key={o.key}
+                            type="button"
+                            className={`pin${loc === i ? ' is-on' : ''}${picked === i ? ' is-picked' : ''}`}
+                            style={{ left: `${o.x}%`, top: `${o.y}%` }}
+                            aria-label={`${offices[i].city}, ${offices[i].country}`}
+                            onClick={() => pickOffice(i)}
+                            onMouseEnter={() => setLoc(i)}
+                            onMouseLeave={() => setLoc(picked ?? 0)}
+                            onFocus={() => setLoc(i)}
+                            onBlur={() => setLoc(picked ?? 0)}
+                        >
+                            <span className="ring" aria-hidden="true" />
+                            <span className="core" aria-hidden="true" />
+                            <span className={`lab lab--${o.side}`} aria-hidden="true">{offices[i].city}</span>
+                        </button>
                     ))}
                 </div>
 
-                <div className="wrap sec a-loc" onMouseLeave={() => setLoc(0)}>
+                <div className="wrap sec a-loc" onMouseLeave={() => setLoc(picked ?? 0)}>
                     <div className="split rv a-loc__head">
                         <div>
                             <div className="eyebrow">{t.about_loc_eyebrow}</div>
@@ -131,11 +163,13 @@ export default function About() {
                             return (
                                 <div
                                     key={o.key}
-                                    className={`ofc${loc === i ? ' is-on' : ''}`}
+                                    ref={(el) => { cardRefs.current[i] = el; }}
+                                    className={`ofc${loc === i ? ' is-on' : ''}${picked === i ? ' is-picked' : ''}`}
                                     tabIndex={0}
-                                    onMouseEnter={() => setLoc(i)}
-                                    onFocus={() => setLoc(i)}
+                                    onMouseEnter={() => hoverCard(i)}
+                                    onFocus={() => hoverCard(i)}
                                 >
+                                    {picked === i && <span className="ofc__flash" key={tick} aria-hidden="true" />}
                                     <div className="ofc__country">{offices[i].country}</div>
                                     <div className="ofc__city">{offices[i].city}</div>
                                     {o.hq ? <span className="ofc__badge ofc__badge--hq">{t.about_badge_hq}</span> : ''}

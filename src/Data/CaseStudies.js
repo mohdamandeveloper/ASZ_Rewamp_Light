@@ -1,4 +1,4 @@
-import logoMega from '../assets/images/logo-mega2.png';
+import logoMega from '../assets/images/logo-mega2.webp';
 import caseNgo from '../assets/images/case-ngo3.webp';
 import shentonLobby from '../assets/images/shenton-lobby.webp';
 

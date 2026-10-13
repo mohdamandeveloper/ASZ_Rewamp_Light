@@ -80,7 +80,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .site-header {
     padding-left: 14px;
     padding-right: 14px;
@@ -636,7 +636,7 @@ $img-safin: url('../../assets/images/prod-safin3.webp'); // prod-safin.webp
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .nav__end .nav__cta {
     display: none;
   }
@@ -647,7 +647,7 @@ $img-safin: url('../../assets/images/prod-safin3.webp'); // prod-safin.webp
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1101px) {
   .mnav {
     display: none;
   }
