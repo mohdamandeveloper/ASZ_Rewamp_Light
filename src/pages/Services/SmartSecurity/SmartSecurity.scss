@@ -344,3 +344,97 @@ $bp-phone: 640px;
     padding-right: 20px;
   }
 }
+// =====================================================================
+//  Phone: same as service-*.html (MOBILE-28)
+// =====================================================================
+@media (max-width: 600px) {
+  .svc__hero-inner {
+    padding-top: 124px !important;
+    padding-bottom: 40px !important;
+    min-height: 0 !important;
+  }
+
+  .svc__hero-title {
+    font-size: 44px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.05em !important;
+    overflow-wrap: break-word;
+  }
+
+  .svc__hero-text {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    max-width: none !important;
+  }
+
+  .svc__hero-actions .btn {
+    height: 50px !important;
+    font-size: 15px !important;
+    padding: 0 22px !important;
+  }
+
+  .svc__deliver-wrap {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .svc__title {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  // cards become a swipeable row
+  .svc__cards {
+    display: flex !important;
+    grid-template-columns: none !important;
+    gap: 12px !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
+    margin-left: -20px !important;
+    margin-right: -20px !important;
+    padding: 2px 20px 10px !important;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > * {
+      flex: 0 0 84% !important;
+      max-width: 84%;
+      min-width: 0;
+      min-height: 0 !important;
+      box-sizing: border-box;
+      scroll-snap-align: start;
+    }
+  }
+
+  .svc__cta-wrap {
+    padding-top: 68px !important;
+    padding-bottom: 76px !important;
+  }
+
+  .svc__cta-title {
+    font-size: 40px !important;
+    line-height: 1 !important;
+  }
+
+  .svc__cta-text {
+    font-size: 16px !important;
+    margin-top: 16px !important;
+  }
+
+  .svc__cta-actions {
+    margin-top: 28px !important;
+    gap: 10px !important;
+  }
+
+  .svc .svc__cta-btn {
+    height: 52px !important;
+    padding: 0 24px !important;
+    font-size: 15px !important;
+  }
+}

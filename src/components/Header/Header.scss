@@ -612,233 +612,486 @@ $img-safin: url('../../assets/images/prod-safin3.webp'); // prod-safin.webp
   }
 }
 
-@media (max-width: 900px) {
-  .btn_language .language_selector {
-    min-width: 0;
-    padding: 0 12px;
-  }
-}
-
 // =====================================================================
-//  Mobile: hamburger + left-sliding side navigation (MobileNav in Header.jsx)
+//  Mobile: burger + full-screen menu (MobileNav in Header.jsx)
+//  Mirrors the phone menu in index.html (.mnav / .mpanel):
+//  a full-height sheet under the bar, white sub-menu boxes, language + CTA at the bottom.
 // =====================================================================
 .nav__burger {
   display: none; // desktop: hidden
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   padding: 0;
-  border: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .22);
   background: transparent;
-  color: var(--ac);
+  color: #fff;
   cursor: pointer;
+  position: relative;
   -webkit-tap-highlight-color: transparent;
+  transition: color .3s, border-color .3s;
+
+  &.is-open {
+    color: var(--ac);
+    border-color: rgba(242, 68, 15, .5);
+  }
+
+  // burger <-> X morph: both icons are stacked and cross-fade with a quarter turn
+  &-ic {
+    position: absolute;
+    transition: opacity .3s $ease, transform .45s $ease;
+
+    &--close {
+      opacity: 0;
+      transform: rotate(-90deg) scale(.6);
+    }
+  }
+
+  &.is-open &-ic--menu {
+    opacity: 0;
+    transform: rotate(90deg) scale(.6);
+  }
+
+  &.is-open &-ic--close {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// Logo + burger stay above the sheet
+.nav__brand,
+.nav__end {
+  position: relative;
+  z-index: 2;
+}
+
+// While the menu is open the bar goes solid. backdrop-filter must be off, otherwise it
+// becomes the containing block of the position:fixed sheet and traps it inside the bar.
+.nav {
+  transition: background-color .3s ease;
+}
+
+.nav.nav--menu-open {
+  background: #0a0a0b;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 @media (max-width: 1100px) {
-  .nav__end .nav__cta {
-    display: none;
+  .nav__end .nav__cta,
+  .nav__end .btn_language {
+    display: none; // both live at the bottom of the menu sheet on mobile
   }
 
-  // hide "Start a conversation" on mobile
   .nav__burger {
     display: inline-flex;
   }
 }
 
 @media (min-width: 1101px) {
-  .mnav {
+  .mnav__panel {
     display: none;
   }
 }
 
-.mnav {
+// ---------- The sheet ----------
+// Closed: invisible, nudged up. Open: fades + slides in, then its rows rise in one by one.
+.mnav__panel {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  visibility: hidden;
-  // keep visible until the slide-out finishes, then hide (so closed links aren't focusable)
-  transition: visibility 0s .38s;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 104px 16px 28px; // 28px header offset + 68px bar + 8px gap
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #07070a;
+  color: #fff;
+  opacity: 0;
+  visibility: hidden; // keeps closed links out of the tab order once the fade-out ends
+  transform: translateY(-14px);
+  transition: opacity .35s $ease, transform .45s $ease, visibility 0s .45s;
 
   &.is-open {
+    opacity: 1;
     visibility: visible;
-    transition: visibility 0s;
+    transform: none;
+    transition: opacity .35s $ease, transform .45s $ease, visibility 0s;
   }
 
-  &__overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, .55);
+  > * {
     opacity: 0;
-    transition: opacity .38s ease;
-
-    .mnav.is-open & {
-      opacity: 1;
-    }
+    transform: translateY(14px);
+    transition: opacity .25s ease, transform .25s ease;
   }
 
-  &__panel {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    inset-inline-start: 0;
-    width: min(300px, 82vw);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding-bottom: 24px;
-    box-sizing: border-box;
-    background: #000;
-    color: #fff;
-    border-inline-end: 1px solid rgba(255, 255, 255, .08);
-    box-shadow: 24px 0 60px rgba(0, 0, 0, .5);
-    transform: translateX(-100%); // slide in from the left
-    transition: transform .38s $ease;
-
-    .mnav.is-open & {
-      transform: translateX(0);
-    }
-
-    [dir='rtl'] & {
-      transform: translateX(100%);
-    }
-
-    [dir='rtl'] .mnav.is-open & {
-      transform: translateX(0);
-    }
+  &.is-open > * {
+    opacity: 1;
+    transform: none;
+    transition: opacity .5s $ease, transform .6s $ease;
   }
 
-  &__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 76px;
-    padding: 0 14px 0 20px;
-    flex: none;
-  }
+  &.is-open > :nth-child(1) { transition-delay: .06s; }
+  &.is-open > :nth-child(2) { transition-delay: .10s; }
+  &.is-open > :nth-child(3) { transition-delay: .14s; }
+  &.is-open > :nth-child(4) { transition-delay: .18s; }
+  &.is-open > :nth-child(5) { transition-delay: .22s; }
+  &.is-open > :nth-child(6) { transition-delay: .26s; }
+}
 
-  &__brand img {
-    display: block;
-    height: 50px;
-    width: auto;
-  }
+// ---------- Rows ----------
+.mnav__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 0 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+  // opacity/transform are repeated here because simple rows are direct children of the sheet
+  transition: color .25s, border-color .25s, opacity .25s ease, transform .25s ease;
 
-  &__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    border: 0;
-    background: transparent;
+  &[aria-current='page'] {
     color: var(--ac);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
   }
 
-  &__nav {
-    display: flex;
-    flex-direction: column;
-    margin-top: 6px;
-  }
-
-  &__item {
-    border-bottom: 1px solid rgba(255, 255, 255, .12);
-  }
-
-  &__row {
-    display: flex;
-    align-items: stretch;
-  }
-
-  &__link {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    min-height: 52px;
-    padding: 0 20px;
-    font-size: 15px;
-    font-weight: 500;
-    color: #fff;
-    transition: color .2s;
-
-    &.active {
-      color: var(--ac);
-    }
-  }
-
-  &__toggle {
-    flex: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
+  // Services / Products row: label link + chevron button
+  &--grp {
     padding: 0;
-    border: 0;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
 
-    svg {
-      transition: transform .3s $ease;
+    &.is-open {
+      color: var(--ac);
+      border-bottom-color: transparent;
     }
+  }
 
-    &.is-open svg {
+  &.is-open{
+    .mnav__chev{
+      color: var(--ac);
       transform: rotate(180deg);
     }
   }
+}
 
-  // Accordion: animates height 0 → auto
-  &__sub {
-    display: grid;
-    grid-template-rows: 0fr;
-    visibility: hidden;
-    background: rgba(255, 255, 255, .04);
-    transition: grid-template-rows .32s $ease, visibility 0s .32s;
+.mnav__link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 0 4px;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
 
-    &.is-open {
-      grid-template-rows: 1fr;
-      visibility: visible;
-      transition: grid-template-rows .32s $ease, visibility 0s;
+  &[aria-current='page'] {
+    color: var(--ac);
+  }
+}
+
+.mnav__tog {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-inline-end: -6px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, .08);
+  }
+}
+
+.mnav__chev {
+  color: #8a8a8e;
+  transition: transform .3s $ease, color .3s;
+
+  // .is-open & {
+  //   color: var(--ac);
+  //   transform: rotate(180deg);
+  // }
+}
+
+// ---------- Sub-menu (white box) ----------
+// Height animates 0 -> auto through grid-template-rows; the links inside rise in staggered.
+.mnav__subwrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows .4s $ease, visibility 0s .4s;
+
+  &.is-open {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: grid-template-rows .4s $ease, visibility 0s;
+  }
+}
+
+.mnav__subin {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mnav__sub {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  margin: 2px 0 14px;
+  padding: 8px;
+  border-radius: 22px;
+  background: #fff;
+  color: #0e0e0f;
+  border: 1px solid #e3e3e2;
+
+  > * {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .2s ease, transform .2s ease, background .2s;
+  }
+
+  .is-open > .mnav__subin > & > * {
+    opacity: 1;
+    transform: none;
+    transition: opacity .4s $ease, transform .45s $ease, background .2s;
+  }
+
+  .is-open > .mnav__subin > & > :nth-child(1) { transition-delay: .06s, .06s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(2) { transition-delay: .09s, .09s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(3) { transition-delay: .12s, .12s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(4) { transition-delay: .15s, .15s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(5) { transition-delay: .18s, .18s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(6) { transition-delay: .21s, .21s, 0s; }
+  .is-open > .mnav__subin > & > :nth-child(7) { transition-delay: .24s, .24s, 0s; }
+}
+
+.mnav__sitem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  padding-inline-end: 36px;
+  border-radius: 14px;
+  color: #0e0e0f;
+  transition: background .2s;
+
+  &:hover,
+  &:active,
+  &:focus-visible {
+    background: #f6f6f5;
+    outline: none;
+
+    .mnav__ic:not(.mnav__ic--thumb) {
+      background: var(--ac2);
+      color: #fff;
     }
   }
+}
 
-  &__subin {
-    min-height: 0;
+.mnav__ic {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: #fff0e9;
+  color: var(--ac2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .25s, color .25s;
+
+  // Product thumbnail
+  &--thumb {
+    position: relative;
     overflow: hidden;
+    background: #050506;
+  }
+}
+
+.mnav__timg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &--cordon {
+    background-image: $img-cordon;
   }
 
-  &__sublink {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 46px;
-    padding: 0 20px 0 32px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, .8);
-    transition: color .2s, background .2s;
+  &--mediq {
+    background-image: $img-mediq;
+    background-position: center 30%;
+  }
+
+  &--jobscout {
+    background-image: $img-jobscout;
+  }
+
+  &--safin {
+    background-image: $img-safin;
+    background-color: #fff;
+    background-size: 88% auto;
+  }
+}
+
+.mnav__t {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mnav__go {
+  position: absolute;
+  inset-inline-end: 12px;
+  top: 50%;
+  margin-top: -8px;
+  display: flex;
+  line-height: 0;
+  color: var(--ac2);
+}
+
+// "View all …" bar
+.mnav__all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  margin-top: 4px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: #0e0e0f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background .2s;
+
+  svg {
+    transition: transform .25s;
+  }
+
+  &:hover,
+  &:active {
+    background: var(--ac2);
+    color: #fff;
 
     svg {
-      flex: none;
-      color: var(--ac);
-    }
-
-    &:hover,
-    &:focus-visible {
-      color: #fff;
-      background: rgba(255, 255, 255, .06);
-      outline: none;
+      transform: translateX(4px);
     }
   }
+}
 
-  &__num {
-    flex: none;
-    width: 18px;
-    font-size: 10.5px;
-    letter-spacing: .1em;
+// ---------- Bottom: language + CTA ----------
+.mnav__foot {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mnav__langbtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  span {
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: #f2440f;
+  }
+}
+
+.mnav__langlist {
+  padding: 6px;
+  border-radius: 16px;
+  background: #121214;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.mnav__lopt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  cursor: pointer;
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  svg {
     color: var(--ac);
+  }
+
+  &.on {
+    background: rgba(255, 255, 255, .06);
+  }
+}
+
+.mnav__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  border-radius: 999px;
+  background: var(--ac2);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mnav__panel,
+  .mnav__panel > *,
+  .mnav__subwrap,
+  .mnav__sub > *,
+  .nav__burger-ic,
+  .mnav__chev {
+    transition-duration: .01s !important;
+    transition-delay: 0s !important;
   }
 }

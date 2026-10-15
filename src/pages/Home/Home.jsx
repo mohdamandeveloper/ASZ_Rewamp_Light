@@ -67,6 +67,17 @@ const PRODUCT_CARDS = [
   { id: 'safin', to: ROUTES.safin, img: 'pimg-sf', anim: 'rvr', name: 'Safin', logo: true },
 ];
 
+// Phone (<= 600px) product cards, same order as index.html's .mprods:
+// Cordon (full width), MEDIQ + JobScout (half width each), Safin (full width, white logo panel on top).
+// `card` = index into t.home_products_cards. Pill / text / tags fall back to the existing desktop copy;
+// add t.home_m_products = [{ pill, text, tags }, ...] (same order) to give the phone its own shorter copy.
+const MOBILE_PRODUCTS = [
+  { id: 'cordon', to: ROUTES.cordon, size: 'full', img: 'pimg-co', name: 'Cordon' },
+  { id: 'mediq', to: ROUTES.mediq, size: 'half', img: 'pimg-mq', name: 'MEDIQ', card: 0 },
+  { id: 'jobscout', to: ROUTES.jobscout, size: 'half', img: 'pimg-js', name: 'JobScout', card: 1 },
+  { id: 'safin', to: ROUTES.safin, size: 'full', img: 'pimg-sf', name: 'Safin', card: 2, logo: true },
+];
+
 /* Small shared bits ------------------------------------------------- */
 const A = ({ to, children, ...rest }) =>
   to.startsWith('/') ? <Link to={to} {...rest}>{children}</Link> : <a href={to} {...rest}>{children}</a>;
@@ -267,7 +278,11 @@ export default function Home() {
     let lastT = performance.now();
     let raf;
 
-    const measure = () => { period = (track.scrollWidth + 20) / 2; };
+    const measure = () => {
+      // padding-left (phone: 20px) is not part of the repeating content, so leave it out of the loop length
+      const padL = parseFloat(window.getComputedStyle(track).paddingLeft) || 0;
+      period = (track.scrollWidth - padL + 20) / 2;
+    };
     const place = () => {
       if (period > 0) { sx = sx % period; if (sx > 0) sx -= period; }
       track.style.transform = `translate3d(${sx.toFixed(2)}px,0,0)`;
@@ -583,6 +598,35 @@ export default function Home() {
             ))}
           </div>
 
+          {/* Phone (<= 600px): the compact product cards from index.html */}
+          <div className="mprods" aria-label={t.home_products_eyebrow}>
+            {MOBILE_PRODUCTS.map((p, i) => {
+              const card = p.card == null ? null : productCards[p.card];
+              const m = (t.home_m_products || [])[i] || {};
+              const pill = m.pill || (card ? card.tag : t.home_products_cordon_pill);
+              const text = m.text || (card ? card.text : t.home_products_cordon_text);
+              const tags = m.tags || (p.id === 'cordon' ? chipLabels : []);
+              return (
+                <A className={`mcard ${p.size}${p.logo ? ' mcard--logo' : ''}`} to={p.to} key={p.id}>
+                  <span className={`mimg ${p.img}`} aria-hidden="true" />
+                  <span className="mshade" aria-hidden="true" />
+                  <span className="mpill">{pill}</span>
+                  <span className="mbody">
+                    <span className="mt">{p.name}</span>
+                    <span className="md">{text}</span>
+                    {tags.length > 0 && (
+                      <span className="mtags">{tags.map((tag) => <span key={tag}>{tag}</span>)}</span>
+                    )}
+                    <span className="mfoot">
+                      <span>{t.home_services_learn_more}</span>
+                      <span className="mgo"><ArrowUpRight /></span>
+                    </span>
+                  </span>
+                </A>
+              );
+            })}
+          </div>
+
           <div className="more rv">
             <A className="btn morelink" to={ROUTES.products}>{t.hdr_view_all_products} <Arrow /></A>
           </div>
@@ -603,7 +647,7 @@ export default function Home() {
           <div className="sectors" ref={sliderTrackRef}>
             {sectors.map((s) => (
               <a className="sector" href="#contact" draggable="false" key={s.id}>
-                <span className="indimg simg" aria-hidden="true" style={{ backgroundPosition: `center ${s.py}` }} />
+                <span className={`indimg simg ${s.name}`} aria-hidden="true" style={{ backgroundPosition: `center ${s.py}` }} />
                 <span className="shade" aria-hidden="true" />
                 <span className="snum">{s.n}</span>
                 <span className="sname">{s.name}</span>

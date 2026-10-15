@@ -337,3 +337,97 @@ $ease: cubic-bezier(.2, .7, .2, 1);
     grid-template-columns: 1fr;
   }
 }
+// =====================================================================
+//  Phone: same as service-*.html (MOBILE-28)
+// =====================================================================
+@media (max-width: 600px) {
+  .ai-intel__hero-inner {
+    padding-top: 124px !important;
+    padding-bottom: 40px !important;
+    min-height: 0 !important;
+  }
+
+  .ai-intel__h1.up {
+    font-size: 44px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.05em !important;
+    overflow-wrap: break-word;
+  }
+
+  .ai-intel__lead.up {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    max-width: none !important;
+  }
+
+  .ai-intel__actions .btn {
+    height: 50px !important;
+    font-size: 15px !important;
+    padding: 0 22px !important;
+  }
+
+  .ai-intel__sec {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .ai-intel__title.h2 {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  // cards become a swipeable row
+  .ai-intel__cards {
+    display: flex !important;
+    grid-template-columns: none !important;
+    gap: 12px !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
+    margin-left: -20px !important;
+    margin-right: -20px !important;
+    padding: 2px 20px 10px !important;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > * {
+      flex: 0 0 84% !important;
+      max-width: 84%;
+      min-width: 0;
+      min-height: 0 !important;
+      box-sizing: border-box;
+      scroll-snap-align: start;
+    }
+  }
+
+  .ai-intel__cta-wrap {
+    padding-top: 68px !important;
+    padding-bottom: 76px !important;
+  }
+
+  .ai-intel__cta-title.h2 {
+    font-size: 40px !important;
+    line-height: 1 !important;
+  }
+
+  .ai-intel__cta-lead {
+    font-size: 16px !important;
+    margin-top: 16px !important;
+  }
+
+  .ai-intel__cta-actions {
+    margin-top: 28px !important;
+    gap: 10px !important;
+  }
+
+  .ai-intel__cta-btn.btn {
+    height: 52px !important;
+    padding: 0 24px !important;
+    font-size: 15px !important;
+  }
+}

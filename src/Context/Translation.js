@@ -373,7 +373,7 @@ const translations = {
     about_hero_pill: "About ASZ Technologies",
     about_hero_line1: "Beyond Code. Beyond Conventional.",
     about_hero_line2: "Built for What's Next.",
-    about_hero_text: "We design, engineer, and scale mission-critical enterprise solutions powered by AI, blockchain, and cloud technology, helping businesses move fast, stay resilient, and grow without compromise.",
+    about_hero_text: "We design, engineer, and scale mission-critical technology solutions powered by AI, cloud, and modern engineering helping businesses move faster, stay resilient, and grow without compromise.",
     about_hero_cta: "Explore Services",
 
     // about_locations (offices: same order as OFFICES in About.jsx)
@@ -1870,7 +1870,7 @@ const translations = {
     about_hero_pill: "عن ASZ Technologies",
     about_hero_line1: "ما بعد الكود. ما بعد المألوف.",
     about_hero_line2: "مبنيّون لما هو قادم.",
-    about_hero_text: "نصمّم ونهندس ونوسّع حلولًا مؤسسية حيوية تعمل بالذكاء الاصطناعي والبلوكتشين والحوسبة السحابية، لنساعد الشركات على التحرك بسرعة والحفاظ على مرونتها والنمو دون تنازلات.",
+    about_hero_text: "نصمم ونطور ونوسع نطاق الحلول التقنية الحيوية، مستندين إلى الذكاء الاصطناعي والحوسبة السحابية والهندسة التقنية الحديثة؛ لنساعد الشركات على تسريع وتيرة عملها، وتعزيز مرونتها، وتحقيق النمو دون أي تنازلات.",
     about_hero_cta: "استكشف الخدمات",
 
     // about_locations (offices: same order as OFFICES in About.jsx)

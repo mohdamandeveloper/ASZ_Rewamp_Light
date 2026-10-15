@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../../assets/images/asz-logo2.webp';
 import { useLanguage, useTranslation, LANGUAGES } from '../../Context/LanguageContext';
@@ -193,28 +192,32 @@ function LanguageSelector() {
   );
 }
 
-/* ─── MOBILE SIDE NAVIGATION ────────────────────────────────── */
-// Rendered through a portal into <body>: the .nav bar uses backdrop-filter, which would
-// otherwise trap a position:fixed drawer inside the bar's 70px box.
+/* ─── MOBILE MENU ───────────────────────────────────────────── */
+// Same menu as the phone menu in index.html: a full-screen sheet under the nav bar.
+// The burger in the bar turns into an X while it is open (see .nav__burger).
 // - Tapping the label of Services / Products navigates to that page.
-// - Tapping the arrow only expands / collapses the sub-menu.
+// - Tapping the chevron only expands / collapses the sub-menu (white box of links).
+// - The language picker and the CTA sit at the bottom of the sheet.
 function MobileNav({ open, onClose, t, serviceItems, productItems }) {
-  const [expanded, setExpanded] = useState(null); // 'services' | 'products' | null
-  const closeBtnRef = useRef(null);
+  const [expanded, setExpanded] = useState({}); // { services: bool, products: bool }
+  const [langOpen, setLangOpen] = useState(false);
+  const { language: selected, setLanguage } = useLanguage();
 
-  // Always start collapsed when the drawer is opened again
+  // Collapse the sub-menus once the close animation is done, so the next open starts clean
   useEffect(() => {
-    if (open) {
-      setExpanded(null);
-      closeBtnRef.current?.focus();
-    }
+    if (open) return undefined;
+    const id = setTimeout(() => {
+      setExpanded({});
+      setLangOpen(false);
+    }, 450);
+    return () => clearTimeout(id);
   }, [open]);
 
   // Escape to close, lock page scroll while open, auto-close if the screen grows to desktop
   useEffect(() => {
     if (!open) return undefined;
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    const onResize = () => { if (window.innerWidth > 900) onClose(); };
+    const onResize = () => { if (window.innerWidth > 1100) onClose(); };
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', onKey);
@@ -226,112 +229,132 @@ function MobileNav({ open, onClose, t, serviceItems, productItems }) {
     };
   }, [open, onClose]);
 
-  const toggle = (key) => setExpanded((cur) => (cur === key ? null : key));
+  const toggle = (key) => setExpanded((cur) => ({ ...cur, [key]: !cur[key] }));
 
-  const renderGroup = (key, label, to, links) => {
-    const isOpen = expanded === key;
+  const renderGroup = (key, label, to, links, allLabel) => {
+    const isOpen = !!expanded[key];
     return (
-      <div className="mnav__item">
-        <div className="mnav__row">
+      <div className="mnav__grp">
+        <div className={'mnav__row mnav__row--grp' + (isOpen ? ' is-open' : '')}>
           <NavLink className="mnav__link" to={to} onClick={onClose}>
             {label}
           </NavLink>
           <button
             type="button"
-            className={'mnav__toggle' + (isOpen ? ' is-open' : '')}
+            className="mnav__tog"
             aria-expanded={isOpen}
             aria-controls={`mnav-sub-${key}`}
             aria-label={label}
             onClick={() => toggle(key)}
           >
-            <svg width="16" height="16" strokeWidth="2" {...svgProps}>
+            <svg className="mnav__chev" width="18" height="18" strokeWidth="2.2" {...svgProps}>
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
         </div>
-        <div id={`mnav-sub-${key}`} className={'mnav__sub' + (isOpen ? ' is-open' : '')}>
+        <div id={`mnav-sub-${key}`} className={'mnav__subwrap' + (isOpen ? ' is-open' : '')}>
           <div className="mnav__subin">
-            {links}
+            <div className="mnav__sub">
+              {links}
+              <Link className="mnav__all" to={to} onClick={onClose}>
+                {allLabel} <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     );
   };
 
-  return createPortal(
-    <div className={'mnav' + (open ? ' is-open' : '')}>
-      <div className="mnav__overlay" onClick={onClose} aria-hidden="true" />
+  return (
+    <div id="mobile-nav" className={'mnav__panel' + (open ? ' is-open' : '')} aria-hidden={!open}>
+      <NavLink className="mnav__row" to={ROUTES.home} onClick={onClose}>{t.hdr_home}</NavLink>
+      <NavLink className="mnav__row" to={ROUTES.about} onClick={onClose}>{t.hdr_about}</NavLink>
 
-      <aside
-        id="mobile-nav"
-        className="mnav__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-label={t.hdr_main}
-      >
-        <div className="mnav__top">
-          <Link className="mnav__brand" to="/" aria-label={t.hdr_home_aria} onClick={onClose}>
-            <img src={logo} alt="ASZ" />
+      {renderGroup(
+        'services',
+        t.hdr_services,
+        ROUTES.services,
+        serviceItems.map((s) => (
+          <Link key={s.to} className="mnav__sitem" to={s.to} onClick={onClose}>
+            <span className="mnav__ic">
+              <svg width="18" height="18" strokeWidth="1.7" {...svgProps}>
+                <path d={s.icon} />
+              </svg>
+            </span>
+            <span className="mnav__t">{s.title}</span>
+            <span className="mnav__go"><ArrowUpRight size={16} /></span>
           </Link>
-          <button
-            ref={closeBtnRef}
-            type="button"
-            className="mnav__close"
-            aria-label={t.hdr_close_menu || 'Close menu'}
-            onClick={onClose}
-          >
-            <svg width="26" height="26" strokeWidth="2" {...svgProps}>
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
+        )),
+        t.hdr_view_all_services
+      )}
 
-        <nav className="mnav__nav" aria-label={t.hdr_main}>
-          <div className="mnav__item">
-            <NavLink className="mnav__link" to={ROUTES.home} onClick={onClose}>{t.hdr_home}</NavLink>
-          </div>
-          <div className="mnav__item">
-            <NavLink className="mnav__link" to={ROUTES.about} onClick={onClose}>{t.hdr_about}</NavLink>
-          </div>
+      {renderGroup(
+        'products',
+        t.hdr_products,
+        ROUTES.products,
+        productItems.map((p) => (
+          <Link key={p.to} className="mnav__sitem" to={p.to} onClick={onClose}>
+            <span className="mnav__ic mnav__ic--thumb">
+              <span className={`mnav__timg mnav__timg--${p.img}`} aria-hidden="true" />
+            </span>
+            <span className="mnav__t">{p.title}</span>
+            <span className="mnav__go"><ArrowUpRight size={16} /></span>
+          </Link>
+        )),
+        t.hdr_view_all_products
+      )}
 
-          {renderGroup(
-            'services',
-            t.hdr_services,
-            ROUTES.services,
-            serviceItems.map((s) => (
-              <Link key={s.to} className="mnav__sublink" to={s.to} onClick={onClose}>
-                <svg width="18" height="18" strokeWidth="1.7" {...svgProps}>
-                  <path d={s.icon} />
-                </svg>
-                <span>{s.title}</span>
-              </Link>
-            ))
-          )}
+      <NavLink className="mnav__row" to={ROUTES.work} onClick={onClose}>{t.hdr_work}</NavLink>
 
-          {renderGroup(
-            'products',
-            t.hdr_products,
-            ROUTES.products,
-            productItems.map((p) => (
-              <Link key={p.to} className="mnav__sublink" to={p.to} onClick={onClose}>
-                <span className="mnav__num">{p.n}</span>
-                <span>{p.title}</span>
-              </Link>
-            ))
-          )}
+      <div className="mnav__foot">
+        <button
+          type="button"
+          className="mnav__langbtn"
+          aria-expanded={langOpen}
+          aria-label={`${t.language_label || 'Language'}: ${selected.label}`}
+          onClick={() => setLangOpen((o) => !o)}
+        >
+          {t.language_label || 'Language'}
+          <span>{`${String(selected.code).toUpperCase()} · ${selected.label}`}</span>
+        </button>
 
-          <div className="mnav__item">
-            <NavLink className="mnav__link" to={ROUTES.work} onClick={onClose}>{t.hdr_work}</NavLink>
+        {langOpen && (
+          <div className="mnav__langlist" role="listbox">
+            {LANGUAGES.map((lang) => {
+              const on = selected.code === lang.code;
+              return (
+                <button
+                  key={lang.code}
+                  type="button"
+                  role="option"
+                  aria-selected={on}
+                  className={'mnav__lopt' + (on ? ' on' : '')}
+                  onClick={() => { setLanguage(lang); setLangOpen(false); }}
+                >
+                  <span>
+                    <span aria-hidden="true">{lang.flag}</span>
+                    {lang.label}
+                  </span>
+                  {on && (
+                    <svg width="14" height="14" strokeWidth="2.4" {...svgProps}>
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
           </div>
-          <div className="mnav__item">
-            <Link className="mnav__link" to={'/contact'} onClick={onClose}>
-              {t.hdr_contact || t.hdr_cta}
-            </Link>
-          </div>
-        </nav>
-      </aside>
-    </div>,
-    document.body
+        )}
+
+        <Link className="mnav__cta" to="/contact" onClick={onClose}>
+          {t.hdr_cta}
+          <svg className="rtl-flip" width="16" height="16" strokeWidth="2" {...svgProps}>
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -348,6 +371,12 @@ export default function Header() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const [navSolid, setNavSolid] = useState(false);
+  useEffect(() => {
+    if (menuOpen) { setNavSolid(true); return undefined; }
+    const id = setTimeout(() => setNavSolid(false), 450);
+    return () => clearTimeout(id);
+  }, [menuOpen]);
   const { pathname } = useLocation();
   useEffect(() => { setMenuOpen(false); }, [pathname]); // also covers browser back / forward
 
@@ -409,8 +438,8 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <nav className="nav" aria-label={t.hdr_main}>
-        <Link className="nav__brand" to="/" aria-label={t.hdr_home_aria}>
+      <nav className={'nav' + (menuOpen || navSolid ? ' nav--menu-open' : '')} aria-label={t.hdr_main}>
+        <Link className="nav__brand" to="/" aria-label={t.hdr_home_aria} onClick={closeMenu}>
           <img src={logo} alt="ASZ" />
         </Link>
 
@@ -490,29 +519,33 @@ export default function Header() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </Link>
-          {/* Mobile only: opens the side navigation */}
+          {/* Mobile only: opens / closes the menu (hamburger turns into an X) */}
           <button
             type="button"
-            className="nav__burger"
-            aria-label={t.hdr_open_menu || 'Open menu'}
+            className={'nav__burger' + (menuOpen ? ' is-open' : '')}
+            aria-label={menuOpen ? (t.hdr_close_menu || 'Close menu') : (t.hdr_open_menu || 'Open menu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            onClick={() => setMenuOpen(true)}
+            onClick={() => setMenuOpen((o) => !o)}
           >
-            <svg width="24" height="24" strokeWidth="2" {...svgProps}>
-              <path d="M4 6h16M4 12h16M4 18h16" />
+            <svg className="nav__burger-ic nav__burger-ic--menu" width="20" height="20" strokeWidth="2" {...svgProps}>
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            <svg className="nav__burger-ic nav__burger-ic--close" width="20" height="20" strokeWidth="2.2" {...svgProps}>
+              <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
         </div>
-      </nav>
 
-      <MobileNav
-        open={menuOpen}
-        onClose={closeMenu}
-        t={t}
-        serviceItems={serviceItems}
-        productItems={productItems}
-      />
+        {/* Full-screen phone menu (rendered inside the nav, like index.html) */}
+        <MobileNav
+          open={menuOpen}
+          onClose={closeMenu}
+          t={t}
+          serviceItems={serviceItems}
+          productItems={productItems}
+        />
+      </nav>
     </header>
   );
 }

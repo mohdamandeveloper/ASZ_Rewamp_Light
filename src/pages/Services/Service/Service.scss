@@ -703,4 +703,69 @@ $ease: cubic-bezier(.2, .7, .2, 1);
             transition: none;
         }
     }
+
+    /* ================= Phone: same as services.html (MOBILE-28) ================= */
+    @media (max-width: 600px) {
+        .sv-hero__wrap {
+            padding-top: 124px;
+            text-align: left;
+
+            h1 {
+                font-size: 44px;
+                line-height: 1;
+                letter-spacing: -0.05em;
+                overflow-wrap: break-word;
+            }
+
+            p {
+                margin-left: 0;
+                margin-right: 0;
+                max-width: none;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+        }
+
+        .sv-hero__cta .btn,
+        .morelink {
+            height: 50px !important;
+            font-size: 15px !important;
+            padding: 0 22px !important;
+        }
+
+        .sv-work__head {
+            text-align: left;
+        }
+
+        .sv-work__head h2 {
+            font-size: 34px;
+            line-height: 1.05;
+            letter-spacing: -0.045em;
+        }
+
+        .sv-cta__wrap {
+            padding: 68px 20px 76px;
+
+            h2 {
+                font-size: 40px;
+                line-height: 1;
+            }
+
+            p {
+                font-size: 16px;
+                margin-top: 16px;
+            }
+        }
+
+        .sv-cta__actions {
+            margin-top: 28px;
+            gap: 10px;
+
+            .btn {
+                height: 52px !important;
+                padding: 0 24px !important;
+                font-size: 15px !important;
+            }
+        }
+    }
 }

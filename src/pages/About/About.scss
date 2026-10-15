@@ -94,9 +94,6 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
             max-width: 1180px;
             padding: 150px 32px 0;
             text-align: center;
-            @media (max-width: 600px){
-                padding-top: 150px;
-            }
             h1 {
                 margin: 26px 0 0;
                 font-size: clamp(46px, 66px, 90px);
@@ -104,9 +101,6 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
                 font-weight: 800;
                 letter-spacing: -0.055em;
                 animation-delay: .08s;
-                @media (max-width:600px){
-                font-size: 42px;
-                }
             }
 
             p {
@@ -1091,6 +1085,11 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
             padding-right: 20px;
         }
 
+        .sec {
+            padding-top: 80px;
+            padding-bottom: 80px;
+        }
+
         .split {
             flex-direction: column;
             align-items: flex-start;
@@ -1139,6 +1138,173 @@ $ease2: cubic-bezier(.23, 1, .32, 1);
     @media (max-width: 560px) {
         .g4p {
             grid-template-columns: 1fr;
+        }
+    }
+
+    /* ================= Phone (max 600px), mirrors about.html ================= */
+    @media (max-width: 600px) {
+
+        // rhythm
+        .sec {
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        h1 {
+            overflow-wrap: break-word;
+        }
+
+        // type scale: one size per role
+        .a-hero__wrap {
+            padding-top: 124px;
+            text-align: left; // hero is left-aligned on phones
+
+            h1 {
+                font-size: 44px;
+                line-height: 1;
+                letter-spacing: -0.05em;
+            }
+
+            p {
+                margin-left: 0;
+                margin-right: 0;
+                max-width: none;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .btn {
+                margin-top: 4px;
+            }
+        }
+
+        section h2.h2 {
+            font-size: 34px;
+            line-height: 1.05;
+            letter-spacing: -0.045em;
+        }
+
+        section h2.h2 + p,
+        .split p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        // buttons: same height and type everywhere
+        section .btn {
+            height: 50px;
+            padding: 0 22px;
+            font-size: 15px;
+        }
+
+        // section intro: left-aligned like the rest of the page (closing CTA stays centred)
+        .a-why__head {
+            margin-left: 0;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        .a-why__eyebrow {
+            justify-content: flex-start;
+        }
+
+        // offices: two columns
+        .a-loc .g4p {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .a-loc .ofc {
+            padding: 18px 16px;
+            min-height: 0;
+        }
+
+        .a-loc .ofc__city {
+            font-size: 22px;
+        }
+
+        // stats: three compact cards in one row
+        .a-stats__wrap {
+            padding: 44px 16px 48px;
+        }
+
+        .g3w {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+
+            >* {
+                padding: 20px 6px;
+                min-height: 0;
+            }
+
+            >*> :first-child {
+                font-size: 34px;
+            }
+
+            >*> :last-child {
+                font-size: 9.5px;
+                letter-spacing: .08em;
+            }
+        }
+
+        // core values: swipeable cards
+        .g4p:not(.rv) {
+            display: flex;
+            grid-template-columns: none;
+            grid-template-rows: none;
+            gap: 12px;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            padding: 2px 20px 10px;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            >* {
+                flex: 0 0 80%;
+                max-width: 80%;
+                min-width: 0;
+                min-height: 0;
+                height: auto;
+                box-sizing: border-box;
+                scroll-snap-align: start;
+                grid-column: auto;
+                grid-row: auto;
+                justify-content: flex-start;
+                gap: 30px;
+            }
+        }
+
+        // closing call to action
+        .a-cta .a-cta__wrap {
+            padding: 68px 20px 76px;
+
+            h2 {
+                font-size: 40px;
+                line-height: 1;
+            }
+
+            p {
+                margin-top: 16px;
+                font-size: 16px;
+            }
+
+            .btn {
+                height: 52px;
+                padding: 0 24px;
+                font-size: 15px;
+            }
+        }
+
+        .a-cta__actions {
+            margin-top: 28px;
+            gap: 10px;
         }
     }
 
